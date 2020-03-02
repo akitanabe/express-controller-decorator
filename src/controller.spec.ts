@@ -1,16 +1,16 @@
 import express from 'express';
-import { get, controller, BaseController } from './controller';
+import { Get, Controller, BaseController } from './controller';
 import request from 'supertest';
 
 describe('controller', function() {
-  @controller('/test')
+  @Controller('/test')
   class TestController extends BaseController {
-    @get()
+    @Get()
     index(): string {
       return 'ok';
     }
 
-    @get('/show')
+    @Get('/show')
     show(): { ok: boolean } {
       return { ok: true };
     }

@@ -23,7 +23,7 @@ function addMetaData<T>(value: T, target: unknown, key: symbol): void {
   Reflect.defineMetadata(key, [...list, value], target);
 }
 
-export function controller(basePath: string) {
+export function Controller(basePath: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function(fn: new () => BaseController) {
     return class extends fn {
@@ -68,17 +68,24 @@ export function controller(basePath: string) {
   };
 }
 
-export const get: (path?: string) => MethodDecorator = (path = '/') =>
-  function(target, name, descripter): void {
-    if (typeof name !== 'string') {
-      return;
-    }
+function mapMethod(
+  method: ControllerMetaData['method']
+): (path?: string) => MethodDecorator {
+  return function(path = '/') {
+    return function(target, name, descripter): void {
+      if (typeof name !== 'string') {
+        return;
+      }
 
-    const controllerMetaData: ControllerMetaData = {
-      path,
-      method: 'get',
-      name,
+      const controllerMetaData: ControllerMetaData = {
+        path,
+        method,
+        name,
+      };
+
+      addMetaData(controllerMetaData, target, CONTROLLER_KEY);
     };
-
-    addMetaData(controllerMetaData, target, CONTROLLER_KEY);
   };
+}
+
+export const Get = mapMethod('get');
