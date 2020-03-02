@@ -6,12 +6,13 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "strict": true,
+    "declaration": true,
     "removeComments": true,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "outDir": "dist",
-    "noEmit": true
-  }
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.spec.ts"]
 }
