@@ -1,5 +1,5 @@
 import express from 'express';
-import { Get, Controller, BaseController } from './controller';
+import { Get, Controller, BaseController } from './Controller';
 import request from 'supertest';
 
 describe('controller', function() {
