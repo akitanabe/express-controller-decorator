@@ -3,7 +3,7 @@ import request from 'supertest';
 import Controller from './Controller';
 import Route from './Route';
 import { Get } from './Methods';
-import { Middleware } from './Middleware';
+import Middleware from './Middleware';
 
 describe('Middleware', function() {
   const app = express();
