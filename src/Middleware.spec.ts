@@ -7,23 +7,23 @@ import { Middleware } from './Middleware';
 describe('Middleware', function() {
   const app = express();
 
-  const middleware1: RequestHandler = function(req, res, next) {
+  const middleware1: RequestHandler = function(req, res) {
     res.send({ middleware: true });
     res.end();
   };
 
   const order: string[] = [];
-  const middleware2_0: RequestHandler = function(req, res, next) {
+  const middleware2one: RequestHandler = function(req, res, next) {
     order.push('middleware2_0');
     next();
   };
 
-  const middleware2_1: RequestHandler = function(req, res, next) {
+  const middleware2two: RequestHandler = function(req, res, next) {
     order.push('middleware2_1');
     next();
   };
 
-  const middleware2_2: RequestHandler = function(req, res, next) {
+  const middleware2three: RequestHandler = function(req, res, next) {
     order.push('middleware2_2');
     next();
   };
@@ -36,9 +36,9 @@ describe('Middleware', function() {
       return { ok: true };
     }
 
-    @Middleware(middleware2_0)
-    @Middleware(middleware2_1)
-    @Middleware(middleware2_2)
+    @Middleware(middleware2one)
+    @Middleware(middleware2two)
+    @Middleware(middleware2three)
     @Get('/middleware2')
     middleware2(): void {
       order.push('controller');
