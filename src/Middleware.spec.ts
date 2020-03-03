@@ -1,6 +1,7 @@
 import express, { RequestHandler } from 'express';
 import request from 'supertest';
-import { Controller, Route } from './Controller';
+import Controller from './Controller';
+import Route from './Route';
 import { Get } from './Methods';
 import { Middleware } from './Middleware';
 

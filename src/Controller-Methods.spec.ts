@@ -1,5 +1,6 @@
 import express, { Request } from 'express';
-import { Route, Controller } from './Controller';
+import Controller from './Controller';
+import Route from './Route';
 import { Get, Post, Delete, Put } from './Methods';
 import request from 'supertest';
 
