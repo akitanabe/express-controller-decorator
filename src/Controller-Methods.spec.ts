@@ -19,13 +19,19 @@ describe('controller', function() {
     }
 
     @Post()
-    store(): void {}
+    store(): void {
+      return;
+    }
 
     @Put('/:id')
-    update(): void {}
+    update(): void {
+      return;
+    }
 
     @Delete('/:id')
-    destroy(): void {}
+    destroy(): void {
+      return;
+    }
   }
   const app = express();
 
