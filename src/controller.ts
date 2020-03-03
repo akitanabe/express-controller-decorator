@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getMetadata } from './metadata';
 import { Router } from 'express';
+import { methodsMetadata, MethodsMetadata } from './Methods';
 
 export abstract class BaseController {
   readonly route!: Router;
 }
 
-export type ControllerMetaData = {
-  path: string;
-  method: 'get' | 'post' | 'put' | 'delete';
-  name: string;
+type Metadata = {
+  methods: MethodsMetadata[];
 };
-
 export function Controller(basePath: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function(fn: new () => BaseController) {
@@ -20,12 +17,13 @@ export function Controller(basePath: string) {
         super();
       }
 
-      private controller: ControllerMetaData[] =
-        getMetadata(fn.prototype) || [];
+      private metadata: Metadata = {
+        methods: methodsMetadata.get(fn.prototype),
+      };
 
       get route(): Router {
         const route = Router();
-        this.controller.forEach(
+        this.metadata.methods.forEach(
           ({ path: actionPath, name: actionName, method }) => {
             const action = this[actionName] as unknown;
 
