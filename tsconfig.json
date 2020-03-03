@@ -15,6 +15,5 @@
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.spec.ts"]
+  "include": ["src/**/*.ts"]
 }
