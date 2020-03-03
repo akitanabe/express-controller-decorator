@@ -3,7 +3,7 @@ import { Router, RequestHandler } from 'express';
 import { methodsMetadata, MethodsMetadata } from './Methods';
 import { middlewareMetadata, MiddlewareMetadata } from './Middleware';
 
-export abstract class BaseController {
+export abstract class Controller {
   readonly route!: Router;
 }
 
@@ -12,9 +12,9 @@ type Metadata = {
   middleware: MiddlewareMetadata[];
 };
 
-export function Controller(basePath: string) {
+export function Route(basePath: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return function(fn: new () => BaseController) {
+  return function(fn: new () => Controller) {
     return class extends fn {
       constructor() {
         super();

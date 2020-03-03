@@ -1,11 +1,11 @@
 import express, { Request } from 'express';
-import { Controller, BaseController } from './Controller';
+import { Route, Controller } from './Controller';
 import { Get, Post, Delete, Put } from './Methods';
 import request from 'supertest';
 
 describe('controller', function() {
-  @Controller('/test')
-  class TestController extends BaseController {
+  @Route('/test')
+  class TestController extends Controller {
     @Get()
     index(): string {
       return 'ok';

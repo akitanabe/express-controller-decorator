@@ -1,6 +1,6 @@
 import express, { RequestHandler } from 'express';
 import request from 'supertest';
-import { Controller, BaseController } from './Controller';
+import { Controller, Route } from './Controller';
 import { Get } from './Methods';
 import { Middleware } from './Middleware';
 
@@ -28,8 +28,8 @@ describe('Middleware', function() {
     next();
   };
 
-  @Controller('/test')
-  class TestController extends BaseController {
+  @Route('/test')
+  class TestController extends Controller {
     @Get('/middleware1')
     @Middleware(middleware1)
     middleware1(): { ok: boolean } {
