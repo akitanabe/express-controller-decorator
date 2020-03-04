@@ -36,7 +36,7 @@ app.use('/api', router)
 
 ```
 
-### return string or object value auto Response.send()
+### return value auto Response.send()
 
 ```
 @Route('/api')
@@ -47,10 +47,17 @@ class ApiController extends Controller {
     return 'ok' // => res.send('ok')
   }
 
-  @Get('/:id')
+  @Get('/show/:id')
   show(req:Request, res:Resopnse) {
     ...
-    return { id: value } // => res.json({ id: value })
+    return { id: value } // => res.send({ id: value })
+  }
+
+  // return Promise ok
+  @Get('/')
+  async findAll():{ id :string }[] {
+    ...
+    return [{id: value}] // => res.send([{id: value}])
   }
 }
 ```

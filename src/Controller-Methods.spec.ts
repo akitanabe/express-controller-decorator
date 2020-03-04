@@ -12,10 +12,20 @@ describe('controller', function() {
       return 'ok';
     }
 
-    @Get('/:id')
+    @Get('/show/:id')
     show(req: Request): { id: string } {
       const id = req.params.id as string;
       return { id };
+    }
+
+    @Get('/async/')
+    async asyncIndex(): Promise<string> {
+      return this.index();
+    }
+
+    @Get('/async/show/:id')
+    async asyncShow(req: Request): Promise<{ id: string }> {
+      return this.show(req);
     }
 
     @Post()
@@ -47,10 +57,31 @@ describe('controller', function() {
       });
   });
 
-  const id = 'fe394343';
   it('get show()', (done) => {
+    const id = 'fe394343';
     request(app)
-      .get(`/test/${id}`)
+      .get(`/test/show/${id}`)
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ id });
+        done();
+      });
+  });
+
+  it('get async index()', (done) => {
+    request(app)
+      .get('/test/async')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.text).toBe('ok');
+        done();
+      });
+  });
+
+  it('get async show()', (done) => {
+    const id = 'hj30a9834';
+    request(app)
+      .get(`/test/async/show/${id}`)
       .then((res) => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ id });
@@ -68,6 +99,7 @@ describe('controller', function() {
   });
 
   it('put update()', function(done) {
+    const id = 'pea34a33';
     request(app)
       .put(`/test/:${id}`)
       .then((res) => {
@@ -77,6 +109,7 @@ describe('controller', function() {
   });
 
   it('delete destroy()', function(done) {
+    const id = 'aeara34a33';
     request(app)
       .delete(`/test/:${id}`)
       .then((res) => {
