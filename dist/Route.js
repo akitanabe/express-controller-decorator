@@ -3,6 +3,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Methods_1 = require("./Methods");
 const Middleware_1 = require("./Middleware");
+function createMiddleware(metadata, actionName) {
+    return (metadata.middleware
+        .filter(({ name }) => name === actionName)
+        .map(({ handler }) => handler)
+        .reverse());
+}
+function returnResponse(res, val) {
+    if (val === null || val === undefined) {
+        res.end();
+        return;
+    }
+    res.send(val);
+}
+function createHandler(action) {
+    return function (req, res, next) {
+        const retval = action(req, res, next);
+        if (retval instanceof Promise) {
+            retval
+                .then((promiseVal) => {
+                returnResponse(res, promiseVal);
+            })
+                .catch((err) => {
+                next(err);
+            });
+        }
+        else {
+            returnResponse(res, retval);
+        }
+    };
+}
 function Route(basePath) {
     return function (fn) {
         return class extends fn {
@@ -22,20 +52,8 @@ function Route(basePath) {
                             [basePath, actionPath]
                                 .map((path) => path.replace(/^\/*/, ''))
                                 .join('/');
-                        const middlewares = this.metadata.middleware
-                            .filter(({ name }) => name === actionName)
-                            .map(({ handler }) => handler)
-                            .reverse();
-                        const handler = function (req, res) {
-                            const retval = action(req, res);
-                            if (typeof retval === 'string') {
-                                res.send(retval);
-                            }
-                            else if (typeof retval === 'object') {
-                                res.json(retval);
-                            }
-                            res.end();
-                        };
+                        const middlewares = createMiddleware(this.metadata, actionName);
+                        const handler = createHandler(action.bind(this));
                         route[method](path, [...middlewares, handler]);
                     }
                 });
