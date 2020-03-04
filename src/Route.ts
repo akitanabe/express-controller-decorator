@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Router, RequestHandler } from 'express';
+import { Router, RequestHandler, Response } from 'express';
 import { methodsMetadata, MethodsMetadata } from './Methods';
 import { middlewareMetadata, MiddlewareMetadata } from './Middleware';
 import Controller from './Controller';
@@ -22,17 +22,31 @@ function createMiddleware(
   );
 }
 
+function returnResponse(res: Response, val: unknown): void {
+  if (typeof val === 'string') {
+    res.send(val);
+  } else if (typeof val === 'object') {
+    res.json(val);
+  }
+
+  res.end();
+}
+
 function createHandler(action: Function): RequestHandler {
-  return function(req, res): void {
-    const retval = action(req, res);
+  return function(req, res, next): void {
+    const retval = action(req, res, next);
 
-    if (typeof retval === 'string') {
-      res.send(retval);
-    } else if (typeof retval === 'object') {
-      res.json(retval);
+    if (retval instanceof Promise) {
+      retval
+        .then((promiseVal) => {
+          returnResponse(res, promiseVal);
+        })
+        .catch((err) => {
+          next(err);
+        });
+    } else {
+      returnResponse(res, retval);
     }
-
-    res.end();
   };
 }
 
