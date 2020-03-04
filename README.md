@@ -1,8 +1,14 @@
 # express-controller-decorator
 
+<<<<<<< HEAD
 This is simple routing module for Express in TypeScript.
 
 If you need more features, you need to choose other modules.
+=======
+This is a simple routing module for Express in TypeScript.
+
+You need a lot of functions, you shoud choice
+>>>>>>> 767a5890cdd51525b0e62448b9dc09bec691f0bd
 
 ## Basic Usage
 
