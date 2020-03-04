@@ -64,7 +64,7 @@ export default function Route(basePath: string) {
 
               const middlewares = createMiddleware(this.metadata, actionName);
 
-              const handler = createHandler(action);
+              const handler = createHandler(action.bind(this));
 
               route[method](path, [...middlewares, handler]);
             }
