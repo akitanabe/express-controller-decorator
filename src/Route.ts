@@ -23,13 +23,12 @@ function createMiddleware(
 }
 
 function returnResponse(res: Response, val: unknown): void {
-  if (typeof val === 'string') {
-    res.send(val);
-  } else if (typeof val === 'object') {
-    res.json(val);
+  if (val === null || val === undefined) {
+    res.end();
+    return;
   }
 
-  res.end();
+  res.send(val);
 }
 
 function createHandler(action: Function): RequestHandler {
