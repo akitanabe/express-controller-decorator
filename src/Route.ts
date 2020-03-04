@@ -9,6 +9,19 @@ type Metadata = {
   middleware: MiddlewareMetadata[];
 };
 
+function createMiddleware(
+  metadata: Metadata,
+  actionName: string
+): RequestHandler[] {
+  return (
+    metadata.middleware
+      .filter(({ name }) => name === actionName)
+      .map(({ handler }) => handler)
+      // メソッドデコレータの実行は書かれた逆順になるので反転させる
+      .reverse()
+  );
+}
+
 export default function Route(basePath: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function(fn: new () => Controller) {
@@ -35,11 +48,7 @@ export default function Route(basePath: string) {
                   .map((path) => path.replace(/^\/*/, ''))
                   .join('/');
 
-              const middlewares = this.metadata.middleware
-                .filter(({ name }) => name === actionName)
-                .map(({ handler }) => handler)
-                // メソッドデコレータの実行は書かれた逆順になるので反転させる
-                .reverse();
+              const middlewares = createMiddleware(this.metadata, actionName);
 
               const handler: RequestHandler = function(req, res) {
                 const retval = action(req, res);
