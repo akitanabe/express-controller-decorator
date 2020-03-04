@@ -22,6 +22,20 @@ function createMiddleware(
   );
 }
 
+function createHandler(action: Function): RequestHandler {
+  return function(req, res): void {
+    const retval = action(req, res);
+
+    if (typeof retval === 'string') {
+      res.send(retval);
+    } else if (typeof retval === 'object') {
+      res.json(retval);
+    }
+
+    res.end();
+  };
+}
+
 export default function Route(basePath: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function(fn: new () => Controller) {
@@ -50,17 +64,7 @@ export default function Route(basePath: string) {
 
               const middlewares = createMiddleware(this.metadata, actionName);
 
-              const handler: RequestHandler = function(req, res) {
-                const retval = action(req, res);
-
-                if (typeof retval === 'string') {
-                  res.send(retval);
-                } else if (typeof retval === 'object') {
-                  res.json(retval);
-                }
-
-                res.end();
-              };
+              const handler = createHandler(action);
 
               route[method](path, [...middlewares, handler]);
             }
